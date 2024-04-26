@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "608570814561",
+    "firebase_url": "https://video-117fa-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "video-117fa",
+    "storage_bucket": "video-117fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608570814561:android:989e9829ac82dd5e883a20",
+        "android_client_info": {
+          "package_name": "com.andrzejbrzezinski.rossmannproductlist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhpP8vjB6_f_QW2X4Phc-Mv6_G1T0THcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

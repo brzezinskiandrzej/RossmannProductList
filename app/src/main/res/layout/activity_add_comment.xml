@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".filmpackage.activities.AddCommentFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp">
+    <Space
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+
+    <EditText
+        android:layout_below="@id/space"
+        android:id="@+id/editTextComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Wpisz komentarz" />
+
+    <Button
+        android:layout_below="@id/editTextComment"
+        android:id="@+id/buttonPublishComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Opublikuj"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+</RelativeLayout>

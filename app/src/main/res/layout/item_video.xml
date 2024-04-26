@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <VideoView
+        android:id="@+id/videoview"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_gravity="center_horizontal"
+
+        android:scaleX="1.5" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:id="@+id/videoOverlay"
+        android:background="#66000000"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/startStopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="80dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleY="1.5"
+        android:scaleX="1.5"
+        android:background="#00FFFFFF"
+        android:src="@android:drawable/ic_media_play"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/mediaPlayerControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="150dp"
+
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+
+
+        <TextView
+            android:id="@+id/currentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+
+            android:text="00:00"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="13dp"
+            android:layout_toRightOf="@id/currentTime" />
+
+        <TextView
+            android:id="@+id/totalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+
+            android:text="00:00"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/videotitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/palanquin_dark_semibold"
+        android:padding="5dp"
+        android:text="Tytul"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+
+        />
+
+
+</FrameLayout>

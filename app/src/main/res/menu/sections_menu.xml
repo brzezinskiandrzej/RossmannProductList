@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/my_videos"
+        android:title="My Videos"/>
+    <item
+        android:id="@+id/liked_videos"
+        android:title="Liked Videos" />
+</menu>
