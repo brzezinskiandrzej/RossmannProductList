@@ -3,22 +3,27 @@ package com.andrzejbrzezinski.rossmannproductlist.filmpackage.activities
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.PopupMenu
+import android.widget.PopupWindow
 import android.widget.ProgressBar
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andrzejbrzezinski.rossmannproductlist.FilmsDetailsWithThumbnail
 import com.andrzejbrzezinski.rossmannproductlist.R
@@ -55,6 +60,7 @@ class MyVideosFragment: Fragment(),MyVideosAdapter.OnFilmInteractionListener {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        val toolbar = binding.toolbar
@@ -108,6 +114,7 @@ class MyVideosFragment: Fragment(),MyVideosAdapter.OnFilmInteractionListener {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun showPopupMenu(view: View?) {
         val popup = PopupMenu(context, view)
             popup.menuInflater.inflate(R.menu.sections_menu, popup.menu)
@@ -116,31 +123,37 @@ class MyVideosFragment: Fragment(),MyVideosAdapter.OnFilmInteractionListener {
                     R.id.my_videos -> {
                         binding.sectionIcon.setImageResource(R.drawable.ic_my_profile_media_foreground)
                         binding.textView.text = "My Videos"
+                        showLoadingWithAnimation()
                         viewModel.loadData()
                         true
                     }
                     R.id.liked_videos -> {
                         binding.sectionIcon.setImageResource(R.drawable.ic_menu_liked_media_foreground)
                         binding.textView.text = "Liked Videos"
+                        showLoadingWithAnimation()
                         viewModel.loadLikedFilms()
                         true
                     }
                     else -> false
                 }
-            }
 
+            }
             for (i in 0 until popup.menu.size()) {
                 val menuItem = popup.menu.getItem(i)
                 val spanString = SpannableString(menuItem.title.toString())
                 spanString.setSpan(ForegroundColorSpan(Color.BLACK), 0, spanString.length, 0)
                 menuItem.title = spanString
             }
-            popup.show()
+
+        popup.show()
+
+
     }
 
     private fun displayUpdatedData(it: ViewStateMyVideosLoading.ShowUpadtedData) {
         allFilms=it.films
         myVideosAdapter.updateList(allFilms.take(it.howManyToLoad))
+
 
     }
 
@@ -158,8 +171,8 @@ class MyVideosFragment: Fragment(),MyVideosAdapter.OnFilmInteractionListener {
             headerBinding.currentUser.text = "User: ${it.films[0].owner.toString()}"
         }
 
-
         myVideosAdapter.updateList(allFilms.take(it.howManyToLoad))
+
         hideLoadingWithAnimation()
     }
 
@@ -178,6 +191,16 @@ class MyVideosFragment: Fragment(),MyVideosAdapter.OnFilmInteractionListener {
                 }
             })
         progressBar.visibility = View.GONE
+    }
+    private fun showLoadingWithAnimation() {
+        loadingBackground.alpha = 0f
+        loadingBackground.visibility = View.VISIBLE
+        loadingBackground.animate()
+            .alpha(1f)
+            .setDuration(500)
+            .setListener(null)
+            .start()
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {

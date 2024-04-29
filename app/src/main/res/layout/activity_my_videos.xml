@@ -7,6 +7,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myVideosList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
     <FrameLayout
         android:id="@+id/loading_background"
         android:layout_width="match_parent"
@@ -21,7 +30,19 @@
             android:layout_gravity="center"
             android:visibility="visible" />
     </FrameLayout>
-
+    <RelativeLayout
+        android:id="@+id/background_header"
+        android:layout_width="match_parent"
+        android:background="@color/purple_200"
+        android:layout_height="100dp"
+        ></RelativeLayout>
+    <ImageView
+        android:id="@+id/section_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_my_profile_media_foreground"
+        android:contentDescription="Foreground image"
+        android:translationZ="1dp"/>
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -30,17 +51,11 @@
         android:text="My Videos"
         android:textColor="@color/black"
         android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
         app:layout_constraintStart_toEndOf="@+id/section_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/section_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_my_profile_media_foreground"
-        tools:ignore="MissingConstraints" />
+         />
 
     <ImageView
         android:id="@+id/menu_icon"
@@ -52,18 +67,11 @@
         android:scaleX="0.5"
         android:scaleY="0.5"
         android:src="@drawable/ic_menu_item_dots_foreground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="303dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myVideosList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+
 
 
 

@@ -1,5 +1,8 @@
 package com.andrzejbrzezinski.rossmannproductlist.filmpackage.adapters
 
+import android.graphics.Color
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -65,7 +68,12 @@ class MyVideosAdapter(private val listener: OnFilmInteractionListener) :
                     else -> false
                 }
             }
-
+            for (i in 0 until popup.menu.size()) {
+                val menuItem = popup.menu.getItem(i)
+                val spanString = SpannableString(menuItem.title.toString())
+                spanString.setSpan(ForegroundColorSpan(Color.BLACK), 0, spanString.length, 0)
+                menuItem.title = spanString
+            }
             popup.show()
             true
         }
