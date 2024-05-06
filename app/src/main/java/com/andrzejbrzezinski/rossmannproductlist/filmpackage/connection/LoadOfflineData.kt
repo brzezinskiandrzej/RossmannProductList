@@ -85,7 +85,7 @@ class LoadOfflineData @Inject constructor(private val loginStateService :LoginSt
             Log.i("loadfind","${this@LoadOfflineData}")
             val films = filmDao.getAllFilms()
             films.map{film ->
-                FilmsDetails(url = film.url, name= film.title, owner=film.owner)
+                FilmsDetails(url = film.url, name= film.title, owner=film.owner,views=0)
             }.toMutableList()
 
 
@@ -173,6 +173,10 @@ try {
         progressListener: (Float) -> Unit,
         isStopped: () -> Boolean
     ): String {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun incrementViewCount(videoTitle: String?): Boolean {
         TODO("Not yet implemented")
     }
 

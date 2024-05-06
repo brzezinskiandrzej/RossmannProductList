@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope
 import timber.log.Timber
 import java.io.File
@@ -155,7 +156,8 @@ class LoadFirebaseData @Inject constructor(private val firebaseDatabase: Firebas
 
                             val url = userSnapshot.child("url").getValue(String::class.java)
                             val owner= userSnapshot.child("owner").getValue(String::class.java)
-                            filmlist.add(FilmsDetails(url = url, name = name,owner=owner))
+                            val views=userSnapshot.child("views").getValue(Int::class.java)
+                            filmlist.add(FilmsDetails(url = url, name = name,owner=owner,views=views))
 
 
                         }
@@ -183,8 +185,9 @@ class LoadFirebaseData @Inject constructor(private val firebaseDatabase: Firebas
 
                             val url = userSnapshot.child("url").getValue(String::class.java)
                             val owner= userSnapshot.child("owner").getValue(String::class.java)
+                            val views=userSnapshot.child("views").getValue(Int::class.java)
                             if(owner==username)
-                                filmlist.add(FilmsDetailsWithThumbnail(url = url, name = name,owner=owner,thumbnail = null))
+                                filmlist.add(FilmsDetailsWithThumbnail(url = url, name = name,owner=owner,views=views,thumbnail = null))
 
 
                         }
@@ -225,7 +228,8 @@ class LoadFirebaseData @Inject constructor(private val firebaseDatabase: Firebas
                                 val name = dataSnapshot.child("name").getValue(String::class.java)
                                 val url = dataSnapshot.child("url").getValue(String::class.java)
                                 val owner = dataSnapshot.child("owner").getValue(String::class.java)
-                                filmList.add(FilmsDetailsWithThumbnail(url = url, name = name, owner = owner, thumbnail = null))
+                                val views = dataSnapshot.child("views").getValue(Int::class.java)
+                                filmList.add(FilmsDetailsWithThumbnail(url = url, name = name, owner = owner,views=views ,thumbnail = null))
                             }
                             cont.resume(filmList)
                         }.addOnFailureListener { exception ->
@@ -251,8 +255,9 @@ class LoadFirebaseData @Inject constructor(private val firebaseDatabase: Firebas
 
                             val url = p0.result.child("url").getValue(String::class.java)
                             val owner= p0.result.child("owner").getValue(String::class.java)
+                            val views = p0.result.child("views").getValue(Int::class.java)
 
-                            cont.resume(FilmsDetailsWithThumbnail(url = url, name = name,owner=owner,thumbnail = null))
+                            cont.resume(FilmsDetailsWithThumbnail(url = url, name = name,owner=owner,views=views ,thumbnail = null))
 
 
 
@@ -523,6 +528,41 @@ class LoadFirebaseData @Inject constructor(private val firebaseDatabase: Firebas
 
     }
 
+    override suspend fun incrementViewCount(videoUrl: String?): Boolean {
+        val deferredResult = CompletableDeferred<Boolean>()
+        val connection = firebaseDatabase.getReference("test")
+        connection.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var found = false
+                for (userSnapshot in snapshot.children) {
+                    if (userSnapshot.child("url").getValue(String::class.java) == videoUrl) {
+                        val currentViews = (userSnapshot.child("views").getValue(Int::class.java) ?: 0) + 1
+                        connection.child(userSnapshot.key.toString()).child("views").setValue(currentViews)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    deferredResult.complete(true)
+                                } else {
+                                    deferredResult.completeExceptionally(task.exception ?: Exception("AddViewCount Firebase task failed without exception"))
+                                }
+                            }
+                        found = true
+                        break
+                    }
+                }
+                if (!found) {
+                    Timber.i("That film doesn't exist")
+                    deferredResult.complete(false)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                deferredResult.completeExceptionally(error.toException())
+            }
+        })
+        return deferredResult.await()
+    }
+
+
     override suspend fun addNewFilmToTest(newFilm: String, filmTitle: String, it: String): Boolean = suspendCoroutine<Boolean> { cont ->
         val connection = firebaseDatabase.getReference("test")
         connection.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -537,7 +577,7 @@ class LoadFirebaseData @Inject constructor(private val firebaseDatabase: Firebas
                 if (!filmExist) {
                     val filmCount = snapshot.childrenCount
                     val nextFilmId = filmCount + 1
-                    val newFilm = Film(newFilm, filmTitle, it)
+                    val newFilm = Film(newFilm, filmTitle, it,0)
                     connection.child("Film$nextFilmId").setValue(newFilm)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {

@@ -91,6 +91,19 @@
         android:textColor="@color/black"
 
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewCount"
+        android:fontFamily="@font/palanquin_dark_semibold"
+        android:text="0 views"
+        android:textColor="@color/black"
+        android:layout_gravity="left"
+        android:padding="5dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="15dp"
+        />
 
 
 </FrameLayout>

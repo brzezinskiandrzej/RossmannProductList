@@ -1,39 +1,25 @@
 package com.andrzejbrzezinski.rossmannproductlist.filmpackage.activities
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.andrzejbrzezinski.rossmannproductlist.User
 import com.andrzejbrzezinski.rossmannproductlist.databinding.ActivityLoginUserBinding
-import com.andrzejbrzezinski.rossmannproductlist.filmpackage.connection.LoadOfflineData
-import com.andrzejbrzezinski.rossmannproductlist.filmpackage.dataclasses.Films
-import com.andrzejbrzezinski.rossmannproductlist.filmpackage.room.AppDatabase
-
 import com.andrzejbrzezinski.rossmannproductlist.filmpackage.viewModels.ConnectionUsersViewModel
 import com.andrzejbrzezinski.rossmannproductlist.filmpackage.viewModels.ViewState
-import com.andrzejbrzezinski.rossmannproductlist.objects.LoginState
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import kotlinx.coroutines.*
+
+
 @AndroidEntryPoint
 class LoginUserActivity : AppCompatActivity() {
     private val viewModel:ConnectionUsersViewModel by viewModels()
     private lateinit var binding : ActivityLoginUserBinding
-
+    private val mFirebaseAnalytics: FirebaseAnalytics? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityLoginUserBinding.inflate(layoutInflater)
@@ -67,7 +53,14 @@ class LoginUserActivity : AppCompatActivity() {
         }
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.S)
+    override fun onResume() {
+        super.onResume()
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "my screen classs")
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "my custom screen name")
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+    }
     private fun showLoginForm() {
 
     }

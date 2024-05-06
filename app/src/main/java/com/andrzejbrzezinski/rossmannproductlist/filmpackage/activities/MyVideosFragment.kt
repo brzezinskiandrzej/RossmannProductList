@@ -92,7 +92,7 @@ class MyVideosFragment: Fragment(),MyVideosAdapter.OnFilmInteractionListener {
 //
 
         binding.menuIcon.setOnClickListener { view->
-            showPopupMenu(view)
+            showPopupMenu(binding.menuIcon)
         }
 
 
@@ -171,8 +171,11 @@ class MyVideosFragment: Fragment(),MyVideosAdapter.OnFilmInteractionListener {
             headerBinding.currentUser.text = "User: ${it.films[0].owner.toString()}"
         }
 
-        myVideosAdapter.updateList(allFilms.take(it.howManyToLoad))
-
+        myVideosAdapter.submitList(allFilms.take(it.howManyToLoad)) {
+            binding.myVideosList.scrollToPosition(
+                0
+            )
+        }
         hideLoadingWithAnimation()
     }
 

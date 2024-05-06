@@ -141,7 +141,7 @@ class MyVideosViewModel @Inject constructor (@ApplicationContext private val con
         val filmListAsync=filmsToLoad.map {film->
             async {
                 var thumbnail:Bitmap? =getVideoThumbnail(film.url)
-                    FilmsDetailsWithThumbnail(url=film.url,name=film.name, owner = film.owner,thumbnail = thumbnail)
+                    FilmsDetailsWithThumbnail(url=film.url,name=film.name, owner = film.owner,views=film.views, thumbnail = thumbnail)
             }
         }
         val loadedThumbnails = filmListAsync.awaitAll()

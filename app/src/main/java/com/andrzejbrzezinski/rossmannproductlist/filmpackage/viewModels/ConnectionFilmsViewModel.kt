@@ -1,18 +1,11 @@
 package com.andrzejbrzezinski.rossmannproductlist.filmpackage.viewModels
 
 import android.content.Context
-import android.view.View
-import android.view.animation.Transformation
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andrzejbrzezinski.rossmannproductlist.CombinedComments
-import com.andrzejbrzezinski.rossmannproductlist.CombinedFilmsDetails
-import com.andrzejbrzezinski.rossmannproductlist.CommentsQuantity
 import com.andrzejbrzezinski.rossmannproductlist.FilmWithComments
-import com.andrzejbrzezinski.rossmannproductlist.FilmsDetails
 
 import com.andrzejbrzezinski.rossmannproductlist.filmpackage.interfaces.ILoadData
 import com.andrzejbrzezinski.rossmannproductlist.filmpackage.modules.LoadDataProvider
@@ -21,6 +14,7 @@ import com.andrzejbrzezinski.rossmannproductlist.internetfunctions.InternetConne
 import com.andrzejbrzezinski.rossmannproductlist.objects.LoginStateService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -57,6 +51,7 @@ class ConnectionFilmsViewModel @Inject constructor (@ApplicationContext private 
     var userName:MutableLiveData<String> = MutableLiveData()
     var connection:Boolean = false
     var isUserInteraction:Boolean = true
+    var lastIncrementJob: Job?=null
 
 
     fun checkInternetConnection(isConnected: Boolean)
@@ -280,7 +275,28 @@ class ConnectionFilmsViewModel @Inject constructor (@ApplicationContext private 
             }
         }
     }
+    fun incrementViewCount(videoUrl : String?)
+    {
 
+            lastIncrementJob?.cancel()
+        if (lastIncrementJob?.isActive == true) {
+            Timber.i("Previous increment job is still active.")
+            return
+        }
+
+        lastIncrementJob=viewModelScope.launch {
+            try{
+                loadData.incrementViewCount(videoUrl)
+            }
+            catch (e:Exception)
+            {
+                e.printStackTrace()
+            }
+        }
+    }
+    fun cancelIncrementJob() {
+        lastIncrementJob?.cancel()
+    }
     fun loadData()
     {
         viewModelScope.launch {

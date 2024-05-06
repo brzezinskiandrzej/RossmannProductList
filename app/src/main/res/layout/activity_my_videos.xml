@@ -61,14 +61,12 @@
         android:id="@+id/menu_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:contentDescription="@string/menu_description"
         android:rotation="90"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
         android:src="@drawable/ic_menu_item_dots_foreground"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="303dp" />
+        app:layout_constraintBottom_toTopOf="@+id/myVideosList"
+        app:layout_constraintEnd_toEndOf="@+id/background_header"
+        app:layout_constraintTop_toTopOf="@+id/loading_background" />
 
 
 

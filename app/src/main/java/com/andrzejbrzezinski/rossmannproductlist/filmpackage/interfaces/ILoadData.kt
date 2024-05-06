@@ -34,4 +34,5 @@ interface ILoadData {
         progressListener: (Float) -> Unit,
         isCancelled: () -> Boolean
     ): String
+    suspend fun incrementViewCount(videoUrl: String?):Boolean
 }

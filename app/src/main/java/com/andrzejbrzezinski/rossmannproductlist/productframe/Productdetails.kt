@@ -38,12 +38,14 @@ data class CombinedProductDetails(val productdetailsvdwa:Productdetailsvdwa, val
 data class FilmsDetails(
     val url:String?,
     val name:String?,
-    val owner: String?
+    val owner: String?,
+    val views: Int?
 )
 data class FilmsDetailsWithThumbnail(
     val url:String?,
     val name:String?,
     val owner: String?,
+    val views: Int?,
     val thumbnail: Bitmap?
 )
 data class CommentDetails(
@@ -65,5 +67,6 @@ data class User(
 data class Film(
     val url:String,
     val name:String,
-    val owner:String
+    val owner:String,
+    val views: Int
 )

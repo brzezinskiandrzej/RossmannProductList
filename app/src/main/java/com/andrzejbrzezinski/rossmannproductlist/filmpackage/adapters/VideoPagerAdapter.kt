@@ -13,24 +13,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
 import android.widget.SeekBar
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.andrzejbrzezinski.rossmannproductlist.FilmWithComments
 import com.andrzejbrzezinski.rossmannproductlist.FilmsDetails
 import com.andrzejbrzezinski.rossmannproductlist.databinding.ItemVideoBinding
+import com.andrzejbrzezinski.rossmannproductlist.filmpackage.viewModels.ConnectionFilmsViewModel
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.logging.Handler
 
 class VideoPagerAdapter(var videoList: List<FilmWithComments> = emptyList()) :
     RecyclerView.Adapter<VideoPagerAdapter.ViewHolder>() {
-    class ViewHolder(private val binding: ItemVideoBinding) :
+    fun getVideoIdAt(position: Int): String? {
+        return videoList[position].film.url
+    }
+    class ViewHolder(val binding: ItemVideoBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         @SuppressLint("ClickableViewAccessibility")
         fun bind(videourl: FilmsDetails?) {
+
             binding.videoview.apply {
                 (setVideoURI(Uri.parse(videourl?.url)))
                 requestFocus()
                 start()
+
             }
 
             fun View.fadeIn(duration: Long = 500) {
@@ -56,6 +64,7 @@ class VideoPagerAdapter(var videoList: List<FilmWithComments> = emptyList()) :
             }
         }
         binding.videotitle.text = videourl?.name
+        binding.viewCount.text="${videourl?.views.toString()} views"
 
         binding.startStopButton.setOnClickListener {
             if (binding.videoview.isPlaying) {
@@ -150,6 +159,8 @@ class VideoPagerAdapter(var videoList: List<FilmWithComments> = emptyList()) :
             }
         }
     }
+
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

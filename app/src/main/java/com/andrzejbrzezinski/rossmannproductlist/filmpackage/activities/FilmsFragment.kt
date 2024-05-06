@@ -7,6 +7,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -14,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
+import android.widget.VideoView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
@@ -23,6 +26,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -63,6 +67,9 @@ class FilmsFragment : Fragment() {
     private lateinit var commentsloadingBackground : FrameLayout
     private lateinit var addFilmResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var addCommentResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var viewPager: ViewPager2
+    private var handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
     private var userInteracted = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -213,14 +220,33 @@ class FilmsFragment : Fragment() {
             }*/
         }
         binding.videopager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            var runnable: Runnable? = null
             override fun onPageSelected(position: Int) {
                 currentVideoIndex = position
                 checkifchangevisibility()
                 viewModel.loadCommentsData(position + 1)
-                // viewModel.loadData(position+1)
+                viewModel.cancelIncrementJob()
+                runnable?.let { handler?.removeCallbacks(it) }
+                runnable = Runnable {
+                val currentViewHolder = (binding.videopager.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(position) as? VideoPagerAdapter.ViewHolder
+                currentViewHolder?.let {
+                    if (it.binding.videoview.isPlaying) {
 
-
+                        viewModel.incrementViewCount(adapter.getVideoIdAt(position))
+                    }
+                }
             }
+
+
+            handler?.postDelayed(runnable!!, 10000)
+        }
+
+                override fun onPageScrollStateChanged(state: Int) {
+            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+
+                runnable?.let { handler?.removeCallbacks(it) }
+            }
+        }
         })
 
 
@@ -382,9 +408,12 @@ class FilmsFragment : Fragment() {
             viewModel.checkUserInteraction(true)
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        handler?.removeCallbacksAndMessages(null)
+
     }
 
 
